@@ -1,3 +1,5 @@
+## FactOnlinePrice 테이블에 마스터 테이블(dimModelHeureka)과 일치하지 않는 모델이 있는 Row 삭제
+
 DELETE FROM FactOnlinePrice
   WHERE [Store] = 'alza.cz'
    and not exists(Select null
