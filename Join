@@ -1,0 +1,15 @@
+DELETE FROM FactOnlinePrice
+  WHERE [Store] = 'alza.cz'
+   and not exists(Select null
+	from [RMDashboard].[dbo].[dimModelHeureka] DMH
+   Where FactOnlinePrice.[Product] = DMH.[Marketing Name]
+   and FactOnlinePrice.[Country] = DMH.[Country])
+ 
+SELECT Distinct FOP.[Brand], FOP.[Product], FOP.[Country], FOP.[Date]
+  FROM [RMDashboard].[dbo].[FactOnlinePrice] FOP
+  Where FOP.[Store] = 'alza.cz'
+   and not exists(Select null
+	from [RMDashboard].[dbo].[dimModelHeureka] DMH
+   Where FOP.[Product] = DMH.[Marketing Name]
+   and FOP.[Country] = DMH.[Country])
+   Order by FOP.[Brand], FOP.[Product]
