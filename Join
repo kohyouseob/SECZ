@@ -22,3 +22,18 @@ SELECT Distinct FOP.[Brand], FOP.[Product], FOP.[Country], FOP.[Date]
 Select [Date], [Brand], [Product], [Store], [Model], Count(*) from FactOnlinePrice_New
 group by [Date], [Brand], [Product], [Store], [Model] having COUNT(*) > 1
 order by [Date], [Brand], [Product], [Store], [Model]
+
+
+## Replace Value
+
+Update FactAlzaPrice
+set [Product] = Replace([Product], 'NOTE 10 PRO', 'NOTE 10 PRO 256GB')
+Where [Brand] = 'XIAOMI' and [Product] = 'NOTE 10 PRO'
+
+## Insert New Value
+
+Insert [RMDashboard].[dbo].[dimMapMktName]
+	([MarketingName], [MarketingName2]) VALUES ('NOTE 10 PRO', 'NOTE 10 PRO 256GB')
+
+SELECT *
+  FROM [RMDashboard].[dbo].[dimMapMktName]
