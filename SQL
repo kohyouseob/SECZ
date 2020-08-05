@@ -1,0 +1,39 @@
+## FactOnlinePrice 테이블에 마스터 테이블(dimModelHeureka)과 일치하지 않는 모델이 있는 Row 삭제
+
+DELETE FROM FactOnlinePrice
+  WHERE [Store] = 'alza.cz'
+   and not exists(Select null
+	from [RMDashboard].[dbo].[dimModelHeureka] DMH
+   Where FactOnlinePrice.[Product] = DMH.[Marketing Name]
+   and FactOnlinePrice.[Country] = DMH.[Country])
+ 
+SELECT Distinct FOP.[Brand], FOP.[Product], FOP.[Country], FOP.[Date]
+  FROM [RMDashboard].[dbo].[FactOnlinePrice] FOP
+  Where FOP.[Store] = 'alza.cz'
+   and not exists(Select null
+	from [RMDashboard].[dbo].[dimModelHeureka] DMH
+   Where FOP.[Product] = DMH.[Marketing Name]
+   and FOP.[Country] = DMH.[Country])
+   Order by FOP.[Brand], FOP.[Product]
+
+
+## 동일한 데이타가 두Row이상 있는 것을 확인
+
+Select [Date], [Brand], [Product], [Store], [Model], Count(*) from FactOnlinePrice_New
+group by [Date], [Brand], [Product], [Store], [Model] having COUNT(*) > 1
+order by [Date], [Brand], [Product], [Store], [Model]
+
+
+## Replace Value
+
+Update FactAlzaPrice
+set [Product] = Replace([Product], 'NOTE 10 PRO', 'NOTE 10 PRO 256GB')
+Where [Brand] = 'XIAOMI' and [Product] = 'NOTE 10 PRO'
+
+## Insert New Value
+
+Insert [RMDashboard].[dbo].[dimMapMktName]
+	([MarketingName], [MarketingName2]) VALUES ('NOTE 10 PRO', 'NOTE 10 PRO 256GB')
+
+SELECT *
+  FROM [RMDashboard].[dbo].[dimMapMktName]
